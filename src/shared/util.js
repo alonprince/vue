@@ -139,9 +139,7 @@ export function hasOwn (obj: Object | Array<*>, key: string): boolean {
   return hasOwnProperty.call(obj, key)
 }
 
-/**
- * Create a cached version of a pure function.
- */
+// 内存中cache一份
 export function cached<F: Function> (fn: F): F {
   const cache = Object.create(null)
   return (function cachedFn (str: string) {
