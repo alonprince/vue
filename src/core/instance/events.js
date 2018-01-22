@@ -9,17 +9,23 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
-// 初始化事件
+/**
+ * 初始化事件
+ * 绑定上父级已有的事件
+ * @param {*} vm vue实例
+ */
 export function initEvents (vm: Component) {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
-  // init parent attached events
+  // TODO: 把父级的事件给自己绑定，猜测是为了事件冒泡
   const listeners = vm.$options._parentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }
 }
-
+/* TODO: 为什么要引入target，而不是传进去
+  猜测是为了api保持一致
+*/
 let target: any
 
 function add (event, fn, once) {
@@ -34,6 +40,12 @@ function remove (event, fn) {
   target.$off(event, fn)
 }
 
+/**
+ * 更新绑定的事件
+ * @param {*} vm vue实例
+ * @param {Object} listeners 绑定的事件Map
+ * @param {Object} oldListeners 旧的事件Map
+ */
 export function updateComponentListeners (
   vm: Component,
   listeners: Object,
