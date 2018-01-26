@@ -257,7 +257,21 @@ export function mountComponent ( vm: Component, el: ?Element, hydrating?: boolea
   return vm
 }
 
-export function updateChildComponent ( vm: Component, propsData: ?Object, listeners: ?Object, parentVnode: MountedComponentVNode, renderChildren: ?Array<VNode>) {
+/**
+ * 更新子组件
+ * @param {*} vm vue实例
+ * @param {*} propsData props
+ * @param {*} listeners 监听的事件
+ * @param {*} parentVnode 父级vnode
+ * @param {*} renderChildren 
+ */
+export function updateChildComponent (
+  vm: Component,
+  propsData: ?Object,
+  listeners: ?Object,
+  parentVnode: MountedComponentVNode,
+  renderChildren: ?Array<VNode>
+) {
   if (process.env.NODE_ENV !== 'production') {
     isUpdatingChildComponent = true
   }
@@ -316,6 +330,7 @@ export function updateChildComponent ( vm: Component, propsData: ?Object, listen
   }
 }
 
+// TODO: inactive是干嘛的
 function isInInactiveTree (vm) {
   while (vm && (vm = vm.$parent)) {
     if (vm._inactive) return true
