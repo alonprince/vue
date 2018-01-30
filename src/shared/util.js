@@ -96,7 +96,7 @@ export function toNumber (val: string): number | string {
  * is in that map.
  */
 /**
- * 
+ * 把字符串用逗号分隔后变成值为true的map
  */
 export function makeMap (
   str: string,

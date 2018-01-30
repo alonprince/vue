@@ -1,5 +1,9 @@
 /* not type checking this file because flow doesn't play well with Proxy */
 
+/**
+ * done
+ */
+
 import config from 'core/config'
 import { warn, makeMap } from '../util/index'
 
@@ -24,12 +28,22 @@ if (process.env.NODE_ENV !== 'production') {
     )
   }
 
+  /**
+   * 判断是否支持proxy
+   * defineProperty支持的操作类型比proxy少
+   * defineProperty https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+   * proxy https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler
+   */
   const hasProxy =
     typeof Proxy !== 'undefined' &&
     Proxy.toString().match(/native code/)
 
   if (hasProxy) {
     const isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact')
+    /**
+     * 这个地方是自定义keycode的时候
+     * 加一个proxy用来阻止违法操作
+     */
     config.keyCodes = new Proxy(config.keyCodes, {
       set (target, key, value) {
         if (isBuiltInModifier(key)) {
@@ -43,6 +57,9 @@ if (process.env.NODE_ENV !== 'production') {
     })
   }
 
+  /**
+   * 只允许私有变量或者全局变量
+   */
   const hasHandler = {
     has (target, key) {
       const has = key in target
@@ -54,6 +71,9 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 
+  /**
+   * key是字符串
+   */
   const getHandler = {
     get (target, key) {
       if (typeof key === 'string' && !(key in target)) {
@@ -63,6 +83,11 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 
+  /**
+   * 给_renderProxy添加代理
+   * TODO: 需要知道_withStripped
+   * 需要知道_renderProxy的作用
+   */
   initProxy = function initProxy (vm) {
     if (hasProxy) {
       // determine which proxy handler to use
